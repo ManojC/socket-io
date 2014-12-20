@@ -32,45 +32,6 @@
     <script src="/javascripts/bootstrap.min.js"></script>
     <script src="/javascripts/socket.io.min.js"></script>
     <script>
-    $(document).ready(function() {
-        console.log('yeah!');
-        window.chatServer = io.connect('http://localhost:3000/');
-
-        window.chatServer.on('connect', function(data) {
-            while (!window.chatNickname)
-                window.chatNickname = prompt('what is your chat name?');
-            window.chatServer.emit('join', window.chatNickname);
-            $('#txt-message').focus();
-        });
-
-        window.chatServer.on('messages', function(message) {
-            insertMessage(message)
-        });
-
-        $('#btn-post').unbind('click').click(function() {
-            var message = $('#txt-message').val();
-            if (!message)
-                return;
-            window.chatServer.emit('messages', message);
-            insertMessage({
-                'nickname': 'Me',
-                'message': message
-            });
-            $('#txt-message').val('').focus();
-        });
-
-        $('#txt-message').keypress(function(e) {
-            var key = e.which;
-            if (key == 13) {
-                $('#btn-post').trigger('click');
-            }
-        });
-
-        var insertMessage = function(data) {
-            $('#chat-window').html($('#chat-window').html() + '<div class="row mts mbs"><div class="col-lg-1 text-center"><b>' + data.nickname + ' :' + '</b></div><div class="col-lg-11 text-left">' + data.message + '</div></div>');
-        };
-
-    });
     </script>
 </body>
 
