@@ -1,0 +1,22 @@
+body {
+    padding: 50px;
+    font: 14px "Lucida Grande", Helvetica, Arial, sans-serif;
+}
+a {
+    color: #00B7FF;
+}
+.mtl {
+    margin-top: 20px;
+}
+.mts {
+    margin-top: 5px;
+}
+.mbs {
+    margin-bottom: 5px;
+}
+.box {
+    min-height: 50px;
+}
+.bas {
+    border: thin black solid;
+}
