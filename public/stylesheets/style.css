@@ -19,3 +19,6 @@ a {
 .bas {
     border: thin blue solid;
 }
+.bold{
+	font-weight: bold;
+}

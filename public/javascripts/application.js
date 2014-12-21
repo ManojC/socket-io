@@ -21,24 +21,24 @@
 
         var bindEvents = function() {
             chatServer.on('connect', function(data) {
-                while (!window.nickName)
-                    window.nickName = prompt('what is your chat name?');
+                window.nickName = prompt('what is your chat name?') || 'Demo User';
                 chatServer.emit('join', window.nickName);
                 $('#txt-message').focus();
             });
 
             chatServer.on('messages', function(message) {
                 if (message.isNewUser) {
-                    $('#user-name').html('Hello ' + message.nickname + '!');
+                    $('#user-name').html(message.nickname);
                     return;
                 }
                 insertMessage(message)
             });
 
             $('#btn-post').unbind('click').click(function() {
-                var message = $('#txt-message').val();
+                var message = $('#txt-message').val().trim();
                 if (!message)
                     return;
+                message = message.replace(/(?:\r\n|\r|\n)/g, '<br />');
                 chatServer.emit('messages', message);
                 insertMessage({
                     'nickname': 'Me',
@@ -47,28 +47,39 @@
                 $('#txt-message').val('').focus();
             });
 
-            $('#txt-message').keypress(function(e) {
-                var key = e.which;
-                if (key == 13) {
+            $('#txt-message').keypress(function(event) {
+                var key = event.which;
+                if (key == 13 && !event.shiftKey) {
                     $('#btn-post').trigger('click');
                 }
             });
+            $('#txt-message').keyup(function(event) {
+                if (event.keyCode == 13 && event.shiftKey) {
+                    var content = this.value;
+                    var caret = getCaret(this);
+                    this.value = content.substring(0, caret) +
+                        "\n" + content.substring(caret, content.length);
+                    event.stopPropagation();
+
+                }
+            })
         };
 
         var insertMessage = function(data) {
             var id = guid();
 
-            var newRow = '<tr class="chat-row"><td id="' + id + '" class="col-lg-1 text-right"><b class="right">' +
-                data.nickname + ' :</b> </td> <td class = "col-lg-11 text-left"> ' +
-                data.message + ' </td></tr>';
+            var newRow = '<tr class="chat-row"><td id="' + 
+            id + 
+            '" class="col-lg-1 col-md-1 col-sm-3 col-xs-3 text-right chat-row"><b class="right" title = "' + 
+            data.nickname + '">' +
+            getShortName(data.nickname) + 
+            ' :</b> </td> <td class = "col-lg-11 col-md-11 col-sm-9 col-xs-9 text-left"> ' +
+            data.message + 
+            ' </td></tr>';
 
             $('#chat-container').html($('#chat-container').html() + newRow);
 
-            $container.slimScroll({
-                scrollTo: calculateChatBoxHeight(),
-                height: '280px',
-                alwaysVisible: true
-            });
+            refreshSlimScroll();
         };
 
         var calculateChatBoxHeight = function() {
@@ -79,13 +90,24 @@
             return totalHeight;
         }
 
-        this.init = function() {
-            bindEvents();
+        var refreshSlimScroll = function() {
             $container.slimScroll({
                 scrollTo: calculateChatBoxHeight(),
                 height: '280px',
                 alwaysVisible: true
             });
+        };
+
+        var getShortName = function(name) {
+            if (name && name.trim().length >= 9) {
+                name = name.substring(0, 6).trim() + '..';
+            }
+            return name;
+        };
+
+        this.init = function() {
+            bindEvents();
+            refreshSlimScroll();
         };
     }
 
