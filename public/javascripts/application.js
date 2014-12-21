@@ -6,7 +6,7 @@
 
         var $container = $('#chat-window');
 
-        var chatServer = io.connect('http://192.168.1.8/');
+        var chatServer = io.connect('http://andromeda/');
 
         var guid = function() {
             function s4() {
@@ -44,6 +44,7 @@
                     'nickname': 'Me',
                     'message': message
                 });
+                privateChat($('#txt-message').val());
                 $('#txt-message').val('').focus();
             });
 
@@ -53,6 +54,7 @@
                     $('#btn-post').trigger('click');
                 }
             });
+
             $('#txt-message').keyup(function(event) {
                 if (event.keyCode == 13 && event.shiftKey) {
                     var content = this.value;
@@ -68,18 +70,18 @@
         var insertMessage = function(data) {
             var id = guid();
 
-            var newRow = '<tr class="chat-row"><td id="' + 
-            id + 
-            '" class="col-lg-1 col-md-1 col-sm-3 col-xs-3 text-right chat-row"><b class="right" title = "' + 
-            data.nickname + '">' +
-            getShortName(data.nickname) + 
-            ' :</b> </td> <td class = "col-lg-11 col-md-11 col-sm-9 col-xs-9 text-left"> ' +
-            data.message + 
-            ' </td></tr>';
+            var newRow = '<tr class="chat-row"><td' +
+                ' class="col-lg-1 col-md-1 col-sm-3 col-xs-3 text-right chat-row"><b class="right" title = "' +
+                data.nickname + '">' +
+                getShortName(data.nickname) +
+                ' :</b> </td> <td id="' + id + '" class = "posted col-lg-11 col-md-11 col-sm-9 col-xs-9 text-left"> ' +
+                data.message +
+                ' </td></tr>';
 
             $('#chat-container').html($('#chat-container').html() + newRow);
 
             refreshSlimScroll();
+            $('#'+id).emoticons();
         };
 
         var calculateChatBoxHeight = function() {
@@ -103,6 +105,11 @@
                 name = name.substring(0, 6).trim() + '..';
             }
             return name;
+        };
+
+        var privateChat = function(chatKey) {
+            if (chatKey.trim())
+                chatServer.emit('on-private', chatKey);
         };
 
         this.init = function() {

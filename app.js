@@ -22,7 +22,7 @@ var io = socket.listen(server);
 
 io.sockets.on('connection', function(client) {
     client.on('messages', function(message) {
-        console.log(client.nickname + ' said - ' + message);
+        // console.log(client.nickname + ' said - ' + message);
         client.broadcast.emit('messages', {
             'nickname': client.nickname,
             'message': message
@@ -34,6 +34,10 @@ io.sockets.on('connection', function(client) {
             'isNewUser': true,
             'nickname': name
         });
+    });
+
+    client.on('on-private', function(chatKey) {
+        console.log(chatKey);
     });
 });
 
