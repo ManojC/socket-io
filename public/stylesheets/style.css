@@ -18,5 +18,5 @@ a {
     min-height: 50px;
 }
 .bas {
-    border: thin black solid;
+    border-bottom: thin black solid;
 }
