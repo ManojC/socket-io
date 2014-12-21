@@ -11,7 +11,7 @@ app.get('/', function(request, response) {
 });
 
 //create server
-var server = app.listen(3000, function() {
+var server = app.listen(80, function() {
 
     var host = server.address().address;
     var port = server.address().port;
@@ -30,9 +30,11 @@ io.sockets.on('connection', function(client) {
     });
     client.on('join', function(name) {
         client.nickname = name;
+        client.emit('messages', {
+            'isNewUser': true,
+            'nickname': name
+        });
     });
-
 });
 
 module.exports = app;
-

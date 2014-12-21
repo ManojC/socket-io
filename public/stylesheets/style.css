@@ -1,5 +1,4 @@
 body {
-    padding: 50px;
     font: 14px "Lucida Grande", Helvetica, Arial, sans-serif;
 }
 a {
@@ -18,5 +17,5 @@ a {
     min-height: 50px;
 }
 .bas {
-    border-bottom: thin black solid;
+    border: thin blue solid;
 }

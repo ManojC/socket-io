@@ -12,7 +12,21 @@
 <body>
     <div class="container">
         <div class="row">
-            <div id="chat-window" class="col-lg-12 bas box">
+            <div class="col-lg-12">
+                <h3 id="user-name"></h3>
+            </div>
+        </div>
+        <div id="chat-window" class="row">
+            <div class="col-lg-12">
+                <table class="table table-hover mts">
+                    <tbody id="chat-container">
+                        <tr>
+                            <td class="col-lg-1 text-right chat-row"><b class="right">Socket.io :</b>
+                            </td>
+                            <td class="col-lg-11 text-left">start chatting...</td>
+                        </tr>
+                    </tbody>
+                </table>
             </div>
         </div>
         <div class="row mtl">
@@ -24,15 +38,16 @@
             </div>
         </div>
     </div>
+    <script src="/javascripts/socket.io.min.js"></script>
     <script src="/javascripts/jquery-1.10.2.min.js"></script>
     <script src="/javascripts/bootstrap.min.js"></script>
-    <script src="/javascripts/socket.io.min.js"></script>
+    <script src="/javascripts/jquery.slimscroll.min.js"></script>
     <script src="/javascripts/application.js"></script>
     <script>
     $(document).ready(function() {
         var chatInstance = new window.LKD.ChatApp();
         chatInstance.init();
-        console.log(chatInstance.nickName); 
+        console.log(chatInstance.nickName);
     });
     </script>
 </body>

@@ -4,42 +4,43 @@
 
     if (!window.LKD.ChatApp) window.LKD.ChatApp = function() {
 
-        this.chatServer = io.connect('http://localhost:3000/');
+        var $container = $('#chat-window');
 
-        this.guid = function() {
+        var chatServer = io.connect('http://192.168.1.8/');
+
+        var guid = function() {
             function s4() {
                 return Math.floor((1 + Math.random()) * 0x10000)
                     .toString(16)
                     .substring(1);
             }
-            return 'user ' + s4() + s4() + s4();
+            return s4() + '-' + s4() + s4() + '-' + s4() + s4() + s4() + '-' + s4() + s4();
         };
 
-        this.nickName = this.guid();
+        var nickName = guid();
 
-        this.init = function() {
-            this.bindEvents();
-        };
-
-        this.bindEvents = function() {
-            var self = this;
-            self.chatServer.on('connect', function(data) {
+        var bindEvents = function() {
+            chatServer.on('connect', function(data) {
                 while (!window.nickName)
                     window.nickName = prompt('what is your chat name?');
-                self.chatServer.emit('join', window.nickName);
+                chatServer.emit('join', window.nickName);
                 $('#txt-message').focus();
             });
 
-            self.chatServer.on('messages', function(message) {
-                self.insertMessage(message)
+            chatServer.on('messages', function(message) {
+                if (message.isNewUser) {
+                    $('#user-name').html('Hello ' + message.nickname + '!');
+                    return;
+                }
+                insertMessage(message)
             });
 
             $('#btn-post').unbind('click').click(function() {
                 var message = $('#txt-message').val();
                 if (!message)
                     return;
-                self.chatServer.emit('messages', message);
-                self.insertMessage({
+                chatServer.emit('messages', message);
+                insertMessage({
                     'nickname': 'Me',
                     'message': message
                 });
@@ -54,14 +55,37 @@
             });
         };
 
-        this.insertMessage = function(data) {
-            $('#chat-window').html($('#chat-window').html() +
-                '<div class="row mts mbs"><div class="col-lg-1 text-center"><b>' +
-                data.nickname +
-                ' :' +
-                '</b></div><div class="col-lg-11 text-left">' +
-                data.message +
-                '</div></div>');
+        var insertMessage = function(data) {
+            var id = guid();
+
+            var newRow = '<tr class="chat-row"><td id="' + id + '" class="col-lg-1 text-right"><b class="right">' +
+                data.nickname + ' :</b> </td> <td class = "col-lg-11 text-left"> ' +
+                data.message + ' </td></tr>';
+
+            $('#chat-container').html($('#chat-container').html() + newRow);
+
+            $container.slimScroll({
+                scrollTo: calculateChatBoxHeight(),
+                height: '280px',
+                alwaysVisible: true
+            });
+        };
+
+        var calculateChatBoxHeight = function() {
+            var totalHeight = 0;
+            $('.chat-row').each(function() {
+                totalHeight += $(this).height();
+            });
+            return totalHeight;
+        }
+
+        this.init = function() {
+            bindEvents();
+            $container.slimScroll({
+                scrollTo: calculateChatBoxHeight(),
+                height: '280px',
+                alwaysVisible: true
+            });
         };
     }
 
