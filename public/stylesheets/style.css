@@ -19,6 +19,19 @@ a {
 .bas {
     border: thin blue solid;
 }
-.bold{
-	font-weight: bold;
+.bold {
+    font-weight: bold;
+}
+/* visited link */
+
+a:visited {
+    color: #00FF00;
+}
+/* mouse over link */
+
+a:hover {
+    color: #FF00FF;
+}
+textarea {
+    border: 2px black solid !important;
 }
