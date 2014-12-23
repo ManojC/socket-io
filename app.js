@@ -11,7 +11,7 @@ app.get('/', function(request, response) {
 });
 
 //create server
-var server = app.listen(80, function() {
+var server = app.listen(3000, function() {
 
     var host = server.address().address;
     var port = server.address().port;
@@ -21,7 +21,7 @@ var server = app.listen(80, function() {
 var io = socket.listen(server);
 
 io.sockets.on('connection', function(socket) {
-    console.log(socket.id);
+    // console.log(socket.id);
     io.sockets.sockets['nickname'] = socket.id;
     socket.on('messages', function(message) {
         // console.log(socket.nickname + ' said - ' + message);
@@ -36,7 +36,7 @@ io.sockets.on('connection', function(socket) {
             'nickname': name
         });
     }).on('on-private', function(chatKey) {
-        console.log(chatKey);
+        // console.log(chatKey);
     });
 });
 

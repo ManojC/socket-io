@@ -6,7 +6,7 @@
 
         var $container = $('#chat-window');
 
-        var chatServer = io.connect('http://192.168.1.5/');
+        var chatServer = io.connect('http://sagittarius:3000/');
 
         var guid = function() {
             function s4() {
