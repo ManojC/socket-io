@@ -35,3 +35,6 @@ a:hover {
 textarea {
     border: 2px black solid !important;
 }
+.bts1{
+	border-top: 1px solid #dddddd;
+}

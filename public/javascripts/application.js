@@ -43,6 +43,11 @@
                 if (event.keyCode == 13 && event.shiftKey)
                     applyShiftEnter();
             });
+
+            $('#btn-clear-chat').click(function() {
+                $('#chat-container').html('');
+                refreshSlimScroll();
+            });
         };
 
         var insertMessage = function(data) {
@@ -95,6 +100,8 @@
                 scrollTo: calculateChatBoxHeight(),
                 height: '280px',
                 alwaysVisible: true
+            }).unbind('scroll').bind('scroll', function(e, pos) {
+                console.log('pos');
             });
         };
 
