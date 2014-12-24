@@ -6,7 +6,7 @@
 
         var $container = $('#chat-window');
 
-        var chatServer = io.connect('http://digital-socket.io.jit.su/');
+        var chatServer = io.connect('http://andromeda:3000/');
 
         var guid = function() {
             function s4() {
@@ -19,13 +19,20 @@
 
         var nickName = guid();
 
+        var interval = null;
+
         var bindEvents = function() {
             chatServer.on('connect', function(data) {
                 window.nickName = prompt('what is your chat name?') || 'Demo User';
                 chatServer.emit('join', window.nickName);
                 $('#txt-message').focus();
             }).on('messages', function(message) {
-                message.isNewUser ? $('#user-name').html(message.nickname) : insertMessage(message);
+                if (message.isNewUser) {
+                    $('#user-name').html(message.nickname);
+                } else {
+                    insertMessage(message);
+                    changeTitle(message);
+                }
             }).on('private', function(message) {
                 console.log(message);
             });
@@ -47,6 +54,11 @@
             $('#btn-clear-chat').click(function() {
                 $('#chat-container').html('');
                 refreshSlimScroll();
+            });
+
+            $(window).focus(function() {
+                clearInterval(interval);
+                $("title").text('socket.io');
             });
         };
 
@@ -138,6 +150,14 @@
             this.value = content.substring(0, caret) +
                 "\n" + content.substring(caret, content.length);
             event.stopPropagation();
+        };
+
+        var changeTitle = function(message) {
+            var isOriginalMessage = false;
+            interval = setInterval(function() {
+                document.title = isOriginalMessage ? 'socket.io' : 'message from ' + message.nickname;
+                isOriginalMessage = !isOriginalMessage;
+            }, 700);
         };
 
         this.init = function() {
