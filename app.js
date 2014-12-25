@@ -21,22 +21,26 @@ var server = app.listen(3000, function() {
 var io = socket.listen(server);
 
 io.sockets.on('connection', function(socket) {
-    // console.log(socket.id);
-    io.sockets.sockets['nickname'] = socket.id;
-    socket.on('messages', function(message) {
-        // console.log(socket.nickname + ' said - ' + message);
+
+    socket.on('messages', function(user) {
         socket.broadcast.emit('messages', {
-            'nickname': socket.nickname,
-            'message': message
+            'nickName': user.nickName,
+            'message': user.message
         });
-    }).on('join', function(name) {
-        socket.nickname = name;
-        socket.emit('messages', {
-            'isNewUser': true,
-            'nickname': name
+    });
+
+    socket.on('join', function(user) {
+        socket.nickName = user.name;
+        socket.userId = user.id;
+        console.log('new user - ' + socket.nickName + '(' + socket.userId + ')');
+        console.log('');
+    });
+
+    socket.on('broadcast-refresh', function(user) {
+        socket.broadcast.emit('broadcast-refresh', {
+            'nickName': user.name,
+            'id': user.id
         });
-    }).on('on-private', function(chatKey) {
-        // console.log(chatKey);
     });
 });
 

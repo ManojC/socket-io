@@ -10,6 +10,9 @@ a {
 .mts {
     margin-top: 5px;
 }
+.mtm {
+    margin-top: 10px;
+}
 .mbs {
     margin-bottom: 5px;
 }
@@ -21,6 +24,14 @@ a {
 }
 .bold {
     font-weight: bold;
+}
+
+.right{
+    float: right;
+}
+
+.left{
+    float: left;
 }
 /* visited link */
 
