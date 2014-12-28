@@ -12,7 +12,7 @@ jQuery.fn.ChatApp = function() {
         var userId = '';
 
         this.getUserName = function() {
-            return userName;
+            return $.cookie('nickname') || userName;
         };
 
         this.setUserName = function(name) {
@@ -26,7 +26,7 @@ jQuery.fn.ChatApp = function() {
         };
 
         this.getUserId = function() {
-            return userId;
+            return $.cookie('user-id') || userId;
         };
 
         this.setUserId = function(id) {
@@ -210,9 +210,8 @@ jQuery.fn.ChatApp = function() {
                     $('#logout').removeClass('hidden');
                 }
                 this.isCaller = false;
+                $('#btn-clear-chat').trigger('click');
             }
-
-            $('#btn-clear-chat').trigger('click');
         };
 
         var messages = function(user) {
@@ -320,7 +319,8 @@ jQuery.fn.ChatApp = function() {
 
         this.init = function() {
 
-            chatServer = io.connect('http://192.168.1.5:3000/');
+            // chatServer = io.connect('http://digital-socket.io.jit.su/');
+            chatServer = io.connect('http://localhost:3000/');
 
             bindEvents();
 
