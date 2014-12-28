@@ -1,6 +1,19 @@
 body {
     font: 14px "Lucida Grande", Helvetica, Arial, sans-serif;
 }
+.socket-chat {
+    min-width: 300px !important;
+    max-width: 300px !important;
+    border-radius: 20px;
+    border: solid thin black;
+    background-color: wheat;
+    position: fixed;
+    bottom: 0;
+    right: 0;
+}
+.title {
+    cursor: move;
+}
 a {
     color: #00B7FF;
 }
@@ -25,12 +38,10 @@ a {
 .bold {
     font-weight: bold;
 }
-
-.right{
+.right {
     float: right;
 }
-
-.left{
+.left {
     float: left;
 }
 /* visited link */
@@ -46,6 +57,6 @@ a:hover {
 textarea {
     border: 2px black solid !important;
 }
-.bts1{
-	border-top: 1px solid #dddddd;
+.bts1 {
+    border-top: 1px solid #dddddd;
 }

@@ -48,6 +48,11 @@ jQuery.fn.ChatApp = function() {
         var CurrentUser = new User();
 
         //helper methods start
+
+        var setUserName = function(name) {
+            $('#user-name').html(getShortName(name, 10)).prop('title', name);
+        };
+
         var calculateChatBoxHeight = function() {
             var totalHeight = 0;
             $('.chat-row').each(function() {
@@ -66,9 +71,9 @@ jQuery.fn.ChatApp = function() {
             });
         };
 
-        var getShortName = function(name) {
-            if (name && name.trim().length >= 9) {
-                name = name.substring(0, 6).trim() + '..';
+        var getShortName = function(name, length) {
+            if (name && name.trim().length >= length + 3) {
+                name = name.substring(0, length).trim() + '..';
             }
             return name;
         };
@@ -109,7 +114,7 @@ jQuery.fn.ChatApp = function() {
 
             CurrentUser.setUserName(CurrentUser.defaultName);
 
-            $('#user-name').html(CurrentUser.defaultName);
+            setUserName(CurrentUser.defaultName);
 
             $(this).addClass('hidden');
 
@@ -147,7 +152,7 @@ jQuery.fn.ChatApp = function() {
                 });
             }
 
-            $('#user-name').html(CurrentUser.getUserName());
+            setUserName(CurrentUser.getUserName());
 
             $('#txt-message').focus();
 
@@ -174,7 +179,7 @@ jQuery.fn.ChatApp = function() {
                 $('#logout').removeClass('hidden');
                 $('#login').addClass('hidden');
             }
-            $('#user-name').html(CurrentUser.getUserName());
+            setUserName(CurrentUser.getUserName());
             $('#txt-message').focus();
         };
 
@@ -195,7 +200,7 @@ jQuery.fn.ChatApp = function() {
                 CurrentUser.setUserName(user.nickName);
                 CurrentUser.setUserId($.cookie('user-id'));
 
-                $('#user-name').html(user.nickName);
+                setUserName(user.nickName);
 
                 if (user.nickName === CurrentUser.defaultName) {
 
@@ -227,10 +232,10 @@ jQuery.fn.ChatApp = function() {
             }
 
             var newRow = '<tr class="chat-row"><td' +
-                ' class="col-lg-1 col-md-1 col-sm-3 col-xs-3 text-right chat-row"><b class="right" title = "' +
+                ' class="col-lg-3 text-right chat-row"><b class="right" title = "' +
                 name + '">' +
-                getShortName(name) +
-                ' :</b> </td> <td id="' + id + '" class = "posted col-lg-11 col-md-11 col-sm-9 col-xs-9 text-left"> ' +
+                getShortName(name, 4) +
+                '</b> </td> <td id="' + id + '" class = "posted col-lg-9 text-left"> ' +
                 message +
                 ' </td></tr>';
 
@@ -292,6 +297,14 @@ jQuery.fn.ChatApp = function() {
             clearInterval(interval);
             $("title").text('socket.io');
         };
+
+        var collapse = function() {
+
+            $('.collapse-row').slideToggle(700, function() {
+                $('#collapse').text($('#collapse').text() === 'Minimize' ? 'Maximize' : 'Minimize');
+            });
+        };
+
         // dom event handlers end
 
         var bindEvents = function() {
@@ -309,18 +322,25 @@ jQuery.fn.ChatApp = function() {
 
             $('#logout').unbind('click').click(logout);
 
+            $('#collapse').unbind('click').click(collapse);
+
             $(window).focus(windowFocus);
 
             $(window).mouseover(function() {
                 windowFocus();
-            })
+            });
+
+            $('.container').draggable({
+                cursor: "move",
+                handle: ".dropdown-handler"
+            });
 
         };
 
         this.init = function() {
 
-            chatServer = io.connect('http://digital-socket.io.jit.su/');
-            // chatServer = io.connect('http://localhost:3000/');
+            // chatServer = io.connect('http://digital-socket.io.jit.su/');
+            chatServer = io.connect('http://localhost:3000/');
 
             bindEvents();
 
