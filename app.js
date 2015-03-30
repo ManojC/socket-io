@@ -1,6 +1,14 @@
 var express = require('express');
 var path = require('path');
 var socket = require('socket.io');
+var nodemailer = require('nodemailer');
+var transporter = nodemailer.createTransport({
+    service: 'gmail',
+    auth: {
+        user: 'socket.io.notifications@gmail.com',
+        pass: '%3Dcr%26ei%3DJ3IZVfiiEOXV8gfjnoDoAw%26gws_rd%3Dssl&hl=en'
+    }
+});
 
 var app = express();
 
@@ -34,6 +42,12 @@ io.sockets.on('connection', function(socket) {
         socket.userId = user.id;
         console.log('new user - ' + socket.nickName + '(' + socket.userId + ')');
         console.log('');
+        transporter.sendMail({
+            from: 'socket.io.notifications@gmail.com',
+            to: 'chalodem@gmail.com',
+            subject: 'New User Online',
+            text: user.name + ' (' + user.id + ') is online'
+        });
     });
 
     socket.on('broadcast-refresh', function(user) {
