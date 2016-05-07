@@ -320,7 +320,7 @@ jQuery.fn.ChatApp = function() {
         this.init = function() {
 
             //chatServer = io.connect('http://digital-socket.io.jit.su/');
-            chatServer = io.connect('http://localhost:3000/');
+            chatServer = io.connect('http://chat.immanoj.in/');
 
             bindEvents();
 
