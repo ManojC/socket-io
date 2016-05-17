@@ -1,1 +1,1 @@
-# socket-io Chat Application
+# socket-io chat application
